@@ -26,10 +26,14 @@ const upload = multer({
 
 module.exports = function(app) {
   app.get('/api/products', Product.getAllProducts)
+  app.get('/api/products/count', Product.getProductsCount)
   app.post('/api/product/review', checkJWT, Product.reviewProduct)
   app.post('/api/product/order', checkJWT, Product.order)
-  // app.get('/api/products', checkJWT, Product.getProductsByOwner)
+  app.get('/api/my-products', checkJWT, Product.getProductsByOwner)
+  app.get('/api/user-products/:username', Product.getProductsByUsername)
+  app.delete('/api/my-product', checkJWT, Product.deleteProductByOwner)
   app.get('/api/product/:id', Product.getProductById)
   app.post('/api/products', checkJWT, upload.single('product_picture'), Product.addProduct)
+  app.post('/api/edit-product', checkJWT, upload.single('product_picture'), Product.editProduct)
   app.post('/api/fakeproducts', Product.fakeProducts)
 }

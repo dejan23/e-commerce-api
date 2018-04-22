@@ -54,9 +54,15 @@ exports.getProductsByCategory = (req, res, next) => {
     let totalProducts = results[0];
     let products = results[1];
     let category = results[2];
+    if(!category) {
+      return res.status(422).json({
+        success: false,
+        message: 'There is no category with that id'
+      })
+    }
     res.json({
       success: true,
-      message: 'category',
+      message: `all products in category: ${category.name}`,
       products: products,
       categoryName: category.name,
       totalProducts: totalProducts,

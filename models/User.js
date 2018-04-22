@@ -3,7 +3,12 @@ const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
 const crypto = require('crypto')
 
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
+
 const UserSchema = new Schema({
+  username: {
+    type: String
+  },
   email: {
     type: String,
     unique: true,
@@ -11,12 +16,22 @@ const UserSchema = new Schema({
     lowercase: true,
     required: true
   },
-  name: {
-    type: String
-  },
   password: {
     type: String,
-    required: true
+    required: true,
+    select: false
+  },
+  firstName: {
+    type: String,
+    default: ''
+  },
+  lastName: {
+    type: String,
+    default: ''
+  },
+  about: {
+    type: String,
+    default: ''
   },
   picture: {
     type: String
@@ -25,6 +40,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  products: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
   address: {
     addr1: {
       type: String,
@@ -49,16 +68,35 @@ const UserSchema = new Schema({
   },
 }, {timestamps: true})
 
-UserSchema.pre('save', function(next) {
-  const user = this;
-  bcrypt.genSalt(10, function(err, salt) {
+UserSchema.plugin(deepPopulate);
+
+// UserSchema.pre('save', function(next) {
+//   const user = this;
+//   bcrypt.genSalt(10, function(err, salt) {
+//     if(err) return next(err);
+//     bcrypt.hash(user.password, salt, function(err, hash) {
+//       user.password = hash;
+//       console.log('pre save', hash)
+//       next();
+//     })
+//   })
+// })
+
+UserSchema.methods.eencryptPassword = function(password, callback) {
+   bcrypt.genSalt(10, function(err, salt) {
     if(err) return next(err);
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      user.password = hash;
-      next();
+     bcrypt.hash(password, salt, function(err, hash) {
+      encryptedPassword = hash;
+       callback(null, encryptedPassword);
     })
   })
-})
+}
+
+UserSchema.methods.encryptPassword = function(textPassword) {
+  return bcrypt.hash(textPassword, 10).then(function(hash) {
+    return hash;
+});
+}
 
 UserSchema.methods.comparePassword = function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password)

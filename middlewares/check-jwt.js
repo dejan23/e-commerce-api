@@ -4,7 +4,7 @@ module.exports = function(req, res, next) {
   let token = req.headers['authorization'];
 
   if(token) {
-    jwt.verify(token, process.env.SECRET, function(err, decoded) {
+    jwt.verify(token, process.env.SECRET_JWT, function(err, decoded) {
       if(err) {
         res.json({
           success: false,

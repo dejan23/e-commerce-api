@@ -1,8 +1,14 @@
 {
   "name": "ecom",
   "version": "1.0.0",
-  "description": "",
+  "description": "ecom api",
   "main": "index.js",
+  "author": "Dejan S.",
+  "license": "ISC",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "dependencies": {
     "algoliasearch": "^3.26.0",
     "async": "^2.6.0",
@@ -25,10 +31,5 @@
     "nodemon": "^1.17.3",
     "stripe": "^5.8.0"
   },
-  "devDependencies": {},
-  "scripts": {
-    "dev": "nodemon index.js"
-  },
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {}
 }
